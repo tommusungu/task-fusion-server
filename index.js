@@ -10,7 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Use middlewares
-app.use(cors({ origin: process.env.FRONTEND_URL, credentials: true }));
+
+app.use(cors({ 
+  origin: ["https://tasky-c12c0.web.app", "http://localhost:8000"], 
+  credentials: true 
+}));
+
 app.use(cookieParser());
 
 // Step 1: Redirect to Google authentication
