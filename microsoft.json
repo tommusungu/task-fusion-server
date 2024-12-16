@@ -1,0 +1,9 @@
+{
+    "client_id": "c1c2182a-6e71-4776-a405-69c26758eb50",
+    "client_secret": "EHo8Q~nh9nom8WAFKfyTwmMx7M~jvFxbyVYe5bet",
+    "redirect_uri": "http://localhost:8000/microsoft-oauth2callback/",
+    "tenant_id": "9336c549-77a0-42c1-b65a-e44906a23b95",
+    "object_id": "b1ffc788-01ad-48dd-8042-2f7244cc2985",
+    "supported_account_types": "Accounts in any organizational directory (Any Microsoft Entra ID tenant - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)",
+    "user_access": "All users with a work or school, or personal Microsoft account can use your application or API. This includes Office 365 subscribers."
+}
