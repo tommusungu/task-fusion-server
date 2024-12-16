@@ -41,7 +41,7 @@ app.get('/oauth2callback', async (req, res) => {
       httpOnly: true, // Secure HTTP-only cookie
       secure: true, // Use secure cookies in production
       maxAge: 3600 * 1000, // 1 hour
-      sameSite: 'Strict', // Prevent CSRF
+      sameSite: 'None', // Prevent CSRF
     });
 
     console.log('Access token stored in cookie.');
