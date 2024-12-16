@@ -10,7 +10,6 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Use middlewares
-
 app.use(cors({ 
   origin: ["https://tasky-c12c0.web.app"], 
   credentials: true 
@@ -40,7 +39,7 @@ app.get('/oauth2callback', async (req, res) => {
     // Store access token securely in a cookie
     res.cookie('authToken', tokens.access_token, {
       httpOnly: true, // Secure HTTP-only cookie
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      secure: true, // Use secure cookies in production
       maxAge: 3600 * 1000, // 1 hour
       sameSite: 'Strict', // Prevent CSRF
     });
@@ -117,6 +116,43 @@ app.get('/api/emails', async (req, res) => {
   } catch (error) {
     console.error('Error fetching emails:', error);
     res.status(500).json({ error: 'Failed to fetch emails' });
+  }
+});
+
+// Step 4: Fetch a single email by ID
+app.get('/api/emails/:emailId', async (req, res) => {
+  const { emailId } = req.params;
+  const authToken = req.cookies.authToken; // Read token from cookies
+
+  if (!authToken) {
+    return res.status(400).json({ error: 'Authentication token is missing' });
+  }
+
+  try {
+    oauth2Client.setCredentials({ access_token: authToken });
+
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+    const email = await gmail.users.messages.get({
+      userId: 'me',
+      id: emailId,
+    });
+
+    const headers = email.data.payload.headers;
+    const sender = headers.find((header) => header.name === 'From')?.value || 'Unknown Sender';
+    const time = new Date(parseInt(email.data.internalDate)).toLocaleString();
+    const message = email.data.snippet || 'No preview available';
+
+    res.json({
+      id: email.data.id,
+      sender,
+      message,
+      time,
+      avatar: null, // Add logic to retrieve sender's avatar if available
+      unread: false, // Update based on message status if needed
+    });
+  } catch (error) {
+    console.error('Error fetching email:', error);
+    res.status(500).json({ error: 'Failed to fetch email' });
   }
 });
 
