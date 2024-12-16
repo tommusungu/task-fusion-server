@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Successful</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            text-align: center;
+            max-width: 600px;
+            padding: 20px 30px;
+          
+        }
+        .card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #3b82f6;
+        }
+        .card p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            background-color: #3b82f6;
+            color: #ffffff;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .button:hover {
+            background-color: #2563eb;
+            transform: translateY(-2px);
+        }
+        .button:active {
+            background-color: #1e3a8a;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>Process Successful!</h1>
+            <p>Your request has been processed successfully. You can now go back to your page.</p>
+            <a href="#" class="button" onclick="closeWindow()">Go Back to Your Page</a>
+        </div>
+    </div>
+    <script>
+        function closeWindow() {
+            if (window.opener) {
+                // Close the current window if it was opened by another page
+                window.close();
+            } else {
+                // Fallback to redirecting to the desired page
+                window.location.href = "https://fusion.gre8i.com/emails";
+            }
+        }
+    </script>
+</body>
+</html>
