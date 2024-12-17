@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Use middlewares
 app.use(cors({ 
-  origin: ["https://fusion.gre8i.com"], 
+  origin: ["https://tasky-c12c0.web.app"], 
   credentials: true 
 }));
 
