@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Use middlewares
 app.use(cors({ 
-  origin: ["https://tasky-c12c0.web.app"], 
+  origin: ["http://localhost:8080"], 
   credentials: true 
 }));
 
@@ -70,7 +70,19 @@ app.get('/oauth2callback', async (req, res) => {
   }
 });
 
-// Step 3: Fetch emails using Gmail API
+
+app.get('/api/tokens', (req, res) => {
+  const token = req.cookies.authToken;
+  console.log('api tokens:',token)
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized. No token found in cookies.' });
+  }
+
+  res.json({ access_token: token });
+});
+
+// step 3
+
 app.get('/api/emails', async (req, res) => {
   const authToken = req.cookies.authToken; // Read token from cookies
 
@@ -84,7 +96,7 @@ app.get('/api/emails', async (req, res) => {
     const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
     const response = await gmail.users.messages.list({
       userId: 'me',
-      maxResults: 10,
+      maxResults: 20,
     });
 
     if (!response.data.messages) {
@@ -100,14 +112,33 @@ app.get('/api/emails', async (req, res) => {
 
         const headers = email.data.payload.headers;
         const sender = headers.find((header) => header.name === 'From')?.value || 'Unknown Sender';
-        const time = new Date(parseInt(email.data.internalDate)).toLocaleString();
-        const snippet = email.data.snippet || 'No preview available';
+        const subject = headers.find((header) => header.name === 'Subject')?.value || 'No Subject';
+        const date = new Date(parseInt(email.data.internalDate)).toLocaleString();
+        const read = email.data.labelIds.includes('UNREAD') ? false : true; // Assume email is read if it does not have the "UNREAD" label
+        const provider = 'gmail'; // Since you're using Gmail API
+
+        // Extract the body content
+        let body = 'No body available';
+        const parts = email.data.payload.parts || [email.data.payload];
+
+        for (const part of parts) {
+          if (part.mimeType === 'text/html') {
+            body = Buffer.from(part.body.data, 'base64').toString('utf-8');
+            break; // Use the first HTML part found
+          } else if (part.mimeType === 'text/plain') {
+            body = Buffer.from(part.body.data, 'base64').toString('utf-8');
+          }
+        }
 
         return {
           id: email.data.id,
-          sender,
-          snippet,
-          time,
+          from: sender,
+          to: 'me', // Gmail doesn't provide a direct "to" field in the response, so this can be static or extracted if needed
+          subject,
+          body,
+          date,
+          read,
+          provider,
         };
       })
     );
@@ -118,6 +149,8 @@ app.get('/api/emails', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch emails' });
   }
 });
+
+
 
 // Step 4: Fetch a single email by ID
 app.get('/api/emails/:emailId', async (req, res) => {
