@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Use middlewares
 app.use(cors({ 
-  origin: ["http://localhost:8080"], 
+  origin: ["https://tasky-c12c0.web.app"], 
   credentials: true 
 }));
 
