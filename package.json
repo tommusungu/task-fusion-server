@@ -21,7 +21,9 @@
     "imap": "^0.8.19",
     "mailparser": "^3.7.2",
     "mysql2": "^3.11.5",
-    "node-imap": "^0.9.6"
+    "node-imap": "^0.9.6",
+    "body-parser": "^1.20.3",
+    "stream-chat": "^8.53.0"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
